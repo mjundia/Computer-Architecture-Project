@@ -21,11 +21,15 @@
     <ClCompile Include="sim.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="MESI_FSM.xaml">
+    <ClCompile Include="CACHE.c">
       <Filter>Source Files</Filter>
-    </Page>
+    </ClCompile>
+    <ClCompile Include="MAIN_MEMORY.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MESI_FSM.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

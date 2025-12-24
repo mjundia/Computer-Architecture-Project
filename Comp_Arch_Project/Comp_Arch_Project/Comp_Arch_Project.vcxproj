@@ -129,12 +129,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\jundia.c" />
+    <ClCompile Include="CACHE.c" />
+    <ClCompile Include="MAIN_MEMORY.c" />
+    <ClCompile Include="MESI_FSM.c" />
     <ClCompile Include="sim.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="MESI_FSM.xaml">
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
