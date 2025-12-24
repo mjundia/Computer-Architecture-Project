@@ -9,6 +9,13 @@
 #define BLOCKS_NUM 64
 #define BlOCK_SIZE 8
 
+typedef enum {
+	BUS_NOOP = 0,
+	BUS_RD = 1,   // Bus Read (for S or E states)
+	BUS_RDX = 2,  // Bus Read Exclusive (for M state / Writing)
+	BUS_FLUSH = 3 // Writing back to memory
+} bus_cmd_t;
+
 typedef struct {
 	int opcode;
 	int rd;
@@ -71,11 +78,13 @@ typedef struct {
 //bus struct
 typedef struct {
 	unsigned int bus_origid;
-	unsigned int bus_cmd;
+	bus_cmd_t bus_cmd;
 	unsigned int bus_addr; // first 21 bits
 	DSRAM_Block bus_data; // 32 bit data
 	bool bus_shared; // 1 when answering BusRd transac' if a core has the data in cache, otherwise 0.
+	bool bus_stall; // Added for memory/cache latency synchronization.
 } bus_s;
+
 
 cache_s cache_core[4];     //array of 4 caches
 
@@ -95,12 +104,12 @@ int get_bus_arbitration(bool core_requests[4]) {
 
 // Helper function to get the index (0-63) from the 21-bit address
 int get_index(unsigned int addr) {
-	return addr % BLOCKS_NUM;
+	return (addr >> 5) % BLOCKS_NUM;
 }
 
 // Helper function to get the tag (remaining bits)
 unsigned int get_tag(unsigned int addr) {
-	return addr / BLOCKS_NUM;
+	return (addr >> 5) / BLOCKS_NUM;
 }
 void snoop_bus_transaction(bus_s* bus, int core_id) {
 	// A core does not snoop its own request
@@ -113,7 +122,7 @@ void snoop_bus_transaction(bus_s* bus, int core_id) {
 	if (cache_core[core_id].tsram[idx].tag == tag && cache_core[core_id].tsram[idx].state != INVALID) {
 
 		switch (bus->bus_cmd) {
-		case 1: // BusRd (Someone else wants to read)
+		case BUS_RD: // BusRd (Someone else wants to read)
 			bus->bus_shared = true; // Tell the requester: "I have this data"
 
 			if (cache_core[core_id].tsram[idx].state == MODIFIED) {
@@ -126,7 +135,7 @@ void snoop_bus_transaction(bus_s* bus, int core_id) {
 			}
 			break;
 
-		case 2: // BusRdX (Someone else wants to write/modify)
+		case BUS_RDX: // BusRdX (Someone else wants to write/modify)
 			if (cache_core[core_id].tsram[idx].state == MODIFIED) {
 				// I have the most recent data, must provide it before I invalidate
 				bus->bus_data = cache_core[core_id].dsram[idx];
@@ -135,8 +144,11 @@ void snoop_bus_transaction(bus_s* bus, int core_id) {
 			cache_core[core_id].tsram[idx].state = INVALID;
 			break;
 
-		case 3: // Flush (Data being written to memory)
+		case BUS_FLUSH: // Flush (Data being written to memory)
 			// Usually no state change needed for a flush snooped from another core
+			break;
+		
+		case BUS_NOOP:
 			break;
 		}
 	}
