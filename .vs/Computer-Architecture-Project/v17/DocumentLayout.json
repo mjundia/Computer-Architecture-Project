@@ -1,9 +1,24 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\amerk\\source\\repos\\Computer-Architecture-Project\\",
+  "WorkspaceRootPath": "C:\\Users\\moham\\source\\repos\\Computer-Architecture-Project\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\amerk\\source\\repos\\Computer-Architecture-Project\\jundia.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\moham\\source\\repos\\Computer-Architecture-Project\\Comp_Arch_Project\\Comp_Arch_Project\\sim.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Comp_Arch_Project\\Comp_Arch_Project\\sim.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\moham\\source\\repos\\Computer-Architecture-Project\\Comp_Arch_Project\\Comp_Arch_Project\\CACHE.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Comp_Arch_Project\\Comp_Arch_Project\\CACHE.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\moham\\OneDrive\\\u05E9\u05D5\u05DC\u05D7\u05DF \u05D4\u05E2\u05D1\u05D5\u05D3\u05D4\\EE\\computer project\\sim\\sim\\sim.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\moham\\source\\repos\\Computer-Architecture-Project\\Comp_Arch_Project\\Comp_Arch_Project\\MESI_FSM.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Comp_Arch_Project\\Comp_Arch_Project\\MESI_FSM.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\moham\\source\\repos\\Computer-Architecture-Project\\jundia.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:jundia.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
@@ -14,7 +29,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -26,16 +41,66 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "jundia.c",
-              "DocumentMoniker": "C:\\Users\\amerk\\source\\repos\\Computer-Architecture-Project\\jundia.c",
-              "RelativeDocumentMoniker": "jundia.c",
-              "ToolTip": "C:\\Users\\amerk\\source\\repos\\Computer-Architecture-Project\\jundia.c",
-              "RelativeToolTip": "jundia.c",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "CACHE.c",
+              "DocumentMoniker": "C:\\Users\\moham\\source\\repos\\Computer-Architecture-Project\\Comp_Arch_Project\\Comp_Arch_Project\\CACHE.c",
+              "RelativeDocumentMoniker": "Comp_Arch_Project\\Comp_Arch_Project\\CACHE.c",
+              "ToolTip": "C:\\Users\\moham\\source\\repos\\Computer-Architecture-Project\\Comp_Arch_Project\\Comp_Arch_Project\\CACHE.c",
+              "RelativeToolTip": "Comp_Arch_Project\\Comp_Arch_Project\\CACHE.c",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAAAgAAAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
-              "WhenOpened": "2025-12-17T11:43:00.504Z",
+              "WhenOpened": "2025-12-24T10:37:40.067Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "sim.c",
+              "DocumentMoniker": "C:\\Users\\moham\\OneDrive\\\u05E9\u05D5\u05DC\u05D7\u05DF \u05D4\u05E2\u05D1\u05D5\u05D3\u05D4\\EE\\computer project\\sim\\sim\\sim.c",
+              "RelativeDocumentMoniker": "..\\..\\..\\OneDrive\\\u05E9\u05D5\u05DC\u05D7\u05DF \u05D4\u05E2\u05D1\u05D5\u05D3\u05D4\\EE\\computer project\\sim\\sim\\sim.c",
+              "ToolTip": "C:\\Users\\moham\\OneDrive\\\u05E9\u05D5\u05DC\u05D7\u05DF \u05D4\u05E2\u05D1\u05D5\u05D3\u05D4\\EE\\computer project\\sim\\sim\\sim.c",
+              "RelativeToolTip": "..\\..\\..\\OneDrive\\\u05E9\u05D5\u05DC\u05D7\u05DF \u05D4\u05E2\u05D1\u05D5\u05D3\u05D4\\EE\\computer project\\sim\\sim\\sim.c",
+              "ViewState": "AgIAAPkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-12-24T10:24:49.724Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "sim.c",
+              "DocumentMoniker": "C:\\Users\\moham\\source\\repos\\Computer-Architecture-Project\\Comp_Arch_Project\\Comp_Arch_Project\\sim.c",
+              "RelativeDocumentMoniker": "Comp_Arch_Project\\Comp_Arch_Project\\sim.c",
+              "ToolTip": "C:\\Users\\moham\\source\\repos\\Computer-Architecture-Project\\Comp_Arch_Project\\Comp_Arch_Project\\sim.c",
+              "RelativeToolTip": "Comp_Arch_Project\\Comp_Arch_Project\\sim.c",
+              "ViewState": "AgIAACEAAAAAAAAAAAAQwCsAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-12-24T10:15:37.279Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MESI_FSM.c",
+              "DocumentMoniker": "C:\\Users\\moham\\source\\repos\\Computer-Architecture-Project\\Comp_Arch_Project\\Comp_Arch_Project\\MESI_FSM.c",
+              "RelativeDocumentMoniker": "Comp_Arch_Project\\Comp_Arch_Project\\MESI_FSM.c",
+              "ToolTip": "C:\\Users\\moham\\source\\repos\\Computer-Architecture-Project\\Comp_Arch_Project\\Comp_Arch_Project\\MESI_FSM.c",
+              "RelativeToolTip": "Comp_Arch_Project\\Comp_Arch_Project\\MESI_FSM.c",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-12-24T10:09:08.713Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "jundia.c",
+              "DocumentMoniker": "C:\\Users\\moham\\source\\repos\\Computer-Architecture-Project\\jundia.c",
+              "RelativeDocumentMoniker": "jundia.c",
+              "ToolTip": "C:\\Users\\moham\\source\\repos\\Computer-Architecture-Project\\jundia.c",
+              "RelativeToolTip": "jundia.c",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-12-17T11:43:00.504Z"
             }
           ]
         }
