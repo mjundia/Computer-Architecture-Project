@@ -36,3 +36,4 @@ void init_cache(cache_s* cache) {
 		}
     }
 }
+

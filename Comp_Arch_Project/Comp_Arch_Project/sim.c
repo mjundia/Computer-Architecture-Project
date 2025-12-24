@@ -50,7 +50,11 @@ typedef struct {
 } TSRAM_Line;
 
 typedef struct {
-	int dsram[BLOCK_SIZE * BLOCKS_NUM];
+	uint32_t data[BlOCK_SIZE]; //width block is 32 bit , with 8 words
+} DSRAM_Block;
+
+typedef struct {
+	DSRAM_Block dsram[BLOCKS_NUM];
 	TSRAM_Line tsram[BLOCKS_NUM];
 } cache_s;
 
