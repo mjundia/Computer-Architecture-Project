@@ -27,13 +27,17 @@ typedef struct {
 
 cache_s cache_core[4];     //array of 4 caches
 
-void init_cache(cache_s* cache) {
+void init_tsram(cache_s* cache) {   //initialize tag SRAM states to INVALID and tags to 0
     for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < BLOCKS_NUM; j++) {
 			cache[i].tsram[j].state = INVALID;
 			cache[i].tsram[j].tag = 0;
-			cache[i].dsram[j] = 0;  
+            for (int k = 0; k < BlOCK_SIZE; k++) {
+                cache[i].dsram[j].data[k] = 0;
+            }
 		}
     }
 }
+
+
 
