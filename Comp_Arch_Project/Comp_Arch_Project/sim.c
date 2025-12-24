@@ -6,6 +6,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 #define MEMORY_SIZE 2097152 // 2^21 bytes = 2 MB as per the specification in the project document.
+#define BLOCKS_NUM 64
+#define BlOCK_SIZE 8
 
 typedef struct {
 	int opcode;
@@ -40,3 +42,16 @@ typedef struct {
 	inst_s mem;
 	inst_s wb;
 } reg_s;
+
+//Cache Structs
+typedef struct {
+	uint16_t tag;    // 12 bits 
+	MesiState state; // 2 bits 
+} TSRAM_Line;
+
+typedef struct {
+	int dsram[BLOCK_SIZE * BLOCKS_NUM];
+	TSRAM_Line tsram[BLOCKS_NUM];
+} cache_s;
+
+cache_s cache_core[4];     //array of 4 caches
