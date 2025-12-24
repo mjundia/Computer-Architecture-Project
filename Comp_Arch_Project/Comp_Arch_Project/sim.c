@@ -17,7 +17,6 @@ typedef struct {
 	int immediate; // 16 -bit signed immediate (we need 12 but all the integer data structures is C are power of 2).
 } inst_s;
 
-
 typedef struct {
 	int PC;
 	int reg0;
@@ -43,8 +42,6 @@ typedef struct {
 	inst_s wb;
 } reg_s;
 
-
-
 // MESI struct
 typedef enum {
 	INVALID = '0',
@@ -52,6 +49,7 @@ typedef enum {
 	EXCLUSIVE = '2',
 	MODIFIED = '3'
 } mesi_state_t;
+
 
 //Cache Structs
 typedef struct {
@@ -68,6 +66,8 @@ typedef struct {
 	TSRAM_Line tsram[BLOCKS_NUM];
 } cache_s;
 
+cache_s cache_core[4];     //array of 4 caches
+
 //bus struct
 typedef struct {
 	unsigned int bus_origid;
@@ -77,10 +77,9 @@ typedef struct {
 	bool bus_shared; // 1 when answering BusRd transac' if a core has the data in cache, otherwise 0.
 } bus_s;
 
-cache_s cache_core[4];     //array of 4 caches
-
-
 int last_bus_winner = 3;
+
+//----------BUS_FUNC-----------
 
 int get_bus_arbitration(bool core_requests[4]) {
 	for (int i = 1; i <= 4; i++) {
@@ -93,15 +92,6 @@ int get_bus_arbitration(bool core_requests[4]) {
 	return -1; // No one requested the bus
 }
 
-// Helper function to get the index (0-63) from the 21-bit address
-int get_index(unsigned int addr) {
-	return addr % BLOCKS_NUM;
-}
-
-// Helper function to get the tag (remaining bits)
-unsigned int get_tag(unsigned int addr) {
-	return addr / BLOCKS_NUM;
-}
 void snoop_bus_transaction(bus_s* bus, int core_id) {
 	// A core does not snoop its own request
 	if (bus->bus_origid == core_id) return;
@@ -140,4 +130,32 @@ void snoop_bus_transaction(bus_s* bus, int core_id) {
 			break;
 		}
 	}
+}
+
+//----------CACHE_FUNC-----------
+
+void init_cache(cache_s* cache) {   //initialize tag SRAM states to INVALID and tags to 0
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < BLOCKS_NUM; j++) {
+			cache[i].tsram[j].state = INVALID;
+			cache[i].tsram[j].tag = 0;
+			for (int k = 0; k < BlOCK_SIZE; k++) {
+				cache[i].dsram[j].data[k] = 0;
+			}
+		}
+	}
+}
+
+// Helper function to get the index (0-63) from the 21-bit address
+int get_index(unsigned int addr) {
+	return addr % BLOCKS_NUM;
+}
+
+// Helper function to get the tag (remaining bits)
+unsigned int get_tag(unsigned int addr) {
+	return addr / BLOCKS_NUM;
+}
+
+unsigned int get_offset(unsigned int addr) {
+	return (addr) % BlOCK_SIZE*4; // Each word is 4 bytes
 }
