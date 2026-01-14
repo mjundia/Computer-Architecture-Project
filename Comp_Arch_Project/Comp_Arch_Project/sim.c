@@ -112,11 +112,24 @@ typedef struct {
     unsigned int bus_origid;
     bus_cmd_t bus_cmd;
     unsigned int bus_addr; // first 21 bits
-    DSRAM_Block bus_data; // 32 bit data
+    uint32_t bus_data; // 32 bit data
     bool bus_shared; // 1 when answering BusRd transac' if a core has the data in cache, otherwise 0.
-    bool bus_stall; // Added for memory/cache latency synchronization.
 } bus_s;
 
+typedef struct {
+    char* imem[4];
+    char* memin;
+    char* memout;
+    char* regout[4];
+    char* coretrace[4];
+    char* bustrace;
+    char* dsram[4];
+    char* tsram[4];
+    char* stats[4];
+} sim_files_t;
+
+static FILE* g_core_trace_fp[4] = { NULL, NULL, NULL, NULL };
+static FILE* g_bustrace_fp = NULL;
 
 //***
 // Main Memory struct
@@ -220,7 +233,7 @@ static void reg_write(reg_s* core, int reg_num, int value)
     core->reg0 = 0; // enforce hardwired zero
 }
 //****
-// initialize main memory from memin.txt
+// initialize main memory from memin.txt in MAINNNN
 void init_main_memory() {
     // Allocate memory on heap
     main_memory.data = (uint32_t*)calloc(MEMORY_SIZE, sizeof(uint32_t));
@@ -275,17 +288,13 @@ void write_memout() {
 // handle memory operations per cycle
 void main_memory_cycle(bus_s* bus) {
     //check flush and handle writeback immediately
-    if (bus->bus_cmd == BUS_FLUSH) {
-        unsigned int block_base = (bus->bus_addr >> 3) << 3; // Align to block boundary
-        for (int i = 0; i < BlOCK_SIZE; i++) {
-            unsigned int addr = block_base + i;
-            if (addr < MEMORY_SIZE) {
-                main_memory.data[addr] = bus->bus_data.data[i];
-            }
+    if (bus->bus_cmd == BUS_FLUSH && bus->bus_origid != 4) {
+        if (bus->bus_addr < MEMORY_SIZE) {
+            main_memory.data[bus->bus_addr] = bus->bus_data;
         }
-
         return;
     }
+
 
     // check if memory is busy
     if (main_memory.busy) {
@@ -300,8 +309,8 @@ void main_memory_cycle(bus_s* bus) {
             // prepare flush to send data back
             bus->bus_origid = 4; // Memory ID
             bus->bus_cmd = BUS_FLUSH;
-            bus->bus_addr = main_memory.request_addr;
-            bus->bus_data.data[main_memory.word_offset] = main_memory.data[addr];
+            bus->bus_addr = addr;
+            bus->bus_data = main_memory.data[addr];
 
             main_memory.word_offset++;
 
@@ -317,7 +326,7 @@ void main_memory_cycle(bus_s* bus) {
         if ((bus->bus_cmd == BUS_RD || bus->bus_cmd == BUS_RDX) && bus->bus_origid != 4) {
             // start servicing the request
             main_memory.busy = true;
-            main_memory.wait_cycles = MEM_LATENCY - 1;
+            main_memory.wait_cycles = MEM_LATENCY;
             main_memory.request_addr = (bus->bus_addr >> 3) << 3; // align to block boundary
             main_memory.word_offset = 0;
             main_memory.pending_cmd = bus->bus_cmd;
@@ -335,7 +344,7 @@ void cleanup_main_memory() {
 
 //***
 
-int get_bus_arbitration(bool core_requests[4]) {
+int get_bus_arbitration(bool core_requests[4]) {  //Call in Main ()
     for (int i = 1; i <= 4; i++) {
         int core_idx = (last_bus_winner + i) % 4;
         if (core_requests[core_idx]) {
@@ -347,14 +356,11 @@ int get_bus_arbitration(bool core_requests[4]) {
 }
 
 // Helper function to get the index (0-63) from the 21-bit address
-int get_index(unsigned int addr) {
-    return (addr >> 5) % BLOCKS_NUM;
-}
+int get_index(unsigned int addr) { return (addr >> 3) & 0x3F; }   // 6 bits
 
 // Helper function to get the tag (remaining bits)
-unsigned int get_tag(unsigned int addr) {
-    return (addr >> 5) / BLOCKS_NUM;
-}
+unsigned int get_tag(unsigned int addr) { return addr >> 9; }     // remaining bits
+
 void snoop_bus_transaction(bus_s* bus, int core_id) {
     // A core does not snoop its own request
     if (bus->bus_origid == core_id) return;
@@ -370,8 +376,6 @@ void snoop_bus_transaction(bus_s* bus, int core_id) {
             bus->bus_shared = true; // Tell the requester: "I have this data"
 
             if (cache_core[core_id].tsram[idx].state == MODIFIED) {
-                // Flush: Provide my dirty data to the bus before changing state
-                bus->bus_data = cache_core[core_id].dsram[idx];
                 cache_core[core_id].tsram[idx].state = SHARED;
             }
             else if (cache_core[core_id].tsram[idx].state == EXCLUSIVE) {
@@ -380,10 +384,6 @@ void snoop_bus_transaction(bus_s* bus, int core_id) {
             break;
 
         case BUS_RDX: // BusRdX (Someone else wants to write/modify)
-            if (cache_core[core_id].tsram[idx].state == MODIFIED) {
-                // I have the most recent data, must provide it before I invalidate
-                bus->bus_data = cache_core[core_id].dsram[idx];
-            }
             // Everyone else must invalidate on a BusRdX
             cache_core[core_id].tsram[idx].state = INVALID;
             break;
@@ -580,4 +580,62 @@ static bool decode_stage(int core_id, reg_s* core, uint32_t instr_word)
 
         return hazard; // true = stall
     }
+}
+
+void init_sim_files(int argc, char* argv[], sim_files_t* files)
+{
+    if (argc != 27) {
+        fprintf(stderr,
+            "ERROR: Invalid number of arguments (%d)\n"
+            "Usage:\n"
+            "sim.exe imem0 imem1 imem2 imem3 memin memout "
+            "regout0 regout1 regout2 regout3 "
+            "core0trace core1trace core2trace core3trace "
+            "bustrace "
+            "dsram0 dsram1 dsram2 dsram3 "
+            "tsram0 tsram1 tsram2 tsram3 "
+            "stats0 stats1 stats2 stats3\n",
+            argc);
+        exit(1);
+    }
+
+    int i = 1;
+
+    // Instruction memories
+    for (int c = 0; c < 4; c++)
+        files->imem[c] = argv[i++];
+
+    // Main memory
+    files->memin = argv[i++];
+    files->memout = argv[i++];
+
+    // Register outputs
+    for (int c = 0; c < 4; c++)
+        files->regout[c] = argv[i++];
+
+    // Core traces
+    for (int c = 0; c < 4; c++)
+        files->coretrace[c] = argv[i++];
+
+    // Bus trace
+    files->bustrace = argv[i++];
+
+    // DSRAM dumps
+    for (int c = 0; c < 4; c++)
+        files->dsram[c] = argv[i++];
+
+    // TSRAM dumps
+    for (int c = 0; c < 4; c++)
+        files->tsram[c] = argv[i++];
+
+    // Stats
+    for (int c = 0; c < 4; c++)
+        files->stats[c] = argv[i++];
+}
+
+int main(int argc, char* argv[])
+{
+    sim_files_t files;
+    init_sim_files(argc, argv, &files);
+    return 0;
 }
